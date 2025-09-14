@@ -1,0 +1,31 @@
+---
+name: Upload
+on:
+  workflow_dispatch:
+    inputs:
+      run_id:
+        required: true
+        default: 17715562771
+jobs:
+  upload:
+    name: ${{matrix.release}}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        release: [bookworm, trixie, forky, sid]
+    steps:
+      - name: Download
+        uses: dawidd6/action-download-artifact@v11
+        with:
+          run_id: ${{github.event.inputs.run_id}}
+          name: ${{matrix.release}}
+      - name: Upload
+        continue-on-error: true
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+        with:
+          protocol: ftps
+          server: ${{secrets.FTP_SERVER}}
+          username: ${{secrets.FTP_USERNAME}}
+          password: ${{secrets.FTP_PASSWORD}}
+          server-dir: ${{matrix.release}}/

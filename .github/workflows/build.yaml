@@ -1,0 +1,101 @@
+---
+name: Build
+on:
+  workflow_dispatch:
+    inputs:
+      libdigidoc_ref:
+        required: true
+        default: v4.2.1
+      digidoc_ref:
+        required: true
+        default: v4.8.2
+      qtcommon_ref:
+        required: true
+        default: 6a1b2817ca3bdb529ec272dc9414d64c7e996f95
+jobs:
+  build:
+    name: ${{matrix.release}}
+    runs-on: ubuntu-latest
+    container: debian:${{matrix.release}}
+    strategy:
+      matrix:
+        release: [bookworm, trixie, forky, sid]
+    env:
+      DEBEMAIL: github-actions@github.com
+      DEBFULLNAME: github-actions
+      DEBIAN_FRONTEND: noninteractive
+    steps:
+      - name: Checkout libdigidoc
+        uses: actions/checkout@v4
+        with:
+          repository: open-eid/libdigidoc
+          ref: ${{github.event.inputs.libdigidoc_ref}}
+          path: libdigidoc
+      - name: Checkout digidoc
+        uses: actions/checkout@v4
+        with:
+          repository: open-eid/DigiDoc4-Client
+          ref: ${{github.event.inputs.digidoc_ref}}
+          path: digidoc
+      - name: Checkout qt-common
+        uses: actions/checkout@v4
+        with:
+          repository: open-eid/qt-common
+          ref: ${{github.event.inputs.qtcommon_ref}}
+          path: digidoc/common
+      - name: Dependencies
+        run: |
+          apt-get -qq update
+          apt-get -y install --no-install-recommends \
+            build-essential \
+            cmake \
+            debhelper \
+            default-jdk-headless \
+            devscripts \
+            doxygen \
+            gettext \
+            libboost-test-dev \
+            libflatbuffers-dev \
+            libgl-dev \
+            libldap2-dev \
+            libpcsclite-dev \
+            libpython3-dev \
+            libqt6svg6-dev \
+            libssl-dev \
+            libxml2-dev \
+            libxmlsec1-dev \
+            lintian \
+            lsb-release \
+            pkg-config \
+            python3-setuptools \
+            qt6-l10n-tools \
+            qt6-tools-dev \
+            qt6-tools-dev-tools \
+            swig \
+            zlib1g-dev
+      - name: Build libdigidoc
+        working-directory: libdigidoc
+        run: |
+          export VERSION=$(grep project CMakeLists.txt | egrep -o "([0-9]{1,}\.)+[0-9]{1,}")
+          export VERSIONEX=${VERSION}+${{matrix.release}}.${{github.run_number}}
+          dch --distribution ${{matrix.release}} -v ${VERSIONEX} "Release ${VERSIONEX}."
+          JAVA_HOME=/usr/lib/jvm/default-java dpkg-buildpackage -us -uc
+      - name: Install libdigidoc
+        run: |
+          dpkg -i *.deb
+      - name: Build digidoc
+        working-directory: digidoc
+        run: |
+          export VERSION=$(grep project CMakeLists.txt | egrep -o "([0-9]{1,}\.)+[0-9]{1,}")
+          export VERSIONEX=${VERSION}+${{matrix.release}}.${{github.run_number}}
+          dch --distribution ${{matrix.release}} -v ${VERSIONEX} "Release ${VERSIONEX}."
+          dpkg-buildpackage -us -uc
+      - name: Lintian
+        run: |
+          lintian *.deb
+      - name: Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{matrix.release}}
+          path: "*.deb"
+          retention-days: 1
