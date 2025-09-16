@@ -14,12 +14,13 @@ on:
         default: 6a1b2817ca3bdb529ec272dc9414d64c7e996f95
 jobs:
   build:
-    name: ${{matrix.release}}
-    runs-on: ubuntu-latest
-    container: debian:${{matrix.release}}
     strategy:
       matrix:
         release: [bookworm, trixie, forky, sid]
+        arch: [amd64, arm64]
+    name: ${{matrix.release}} ${{matrix.arch}}
+    runs-on: ubuntu-24.04${{matrix.arch == 'arm64' && '-arm' || ''}}
+    container: debian:${{matrix.release}}
     env:
       DEBEMAIL: github-actions@github.com
       DEBFULLNAME: github-actions
@@ -96,6 +97,6 @@ jobs:
       - name: Artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: ${{matrix.release}}
+          name: ${{matrix.release}}_${{matrix.arch}}
           path: "*.deb"
           retention-days: 1
