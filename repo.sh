@@ -12,7 +12,7 @@ do
     apt-ftparchive \
         -o APT::FTPArchive::Release::Suite="${dist}" \
         -o APT::FTPArchive::Release::Components='main' \
-        -o APT::FTPArchive::Release::Architectures='amd64' \
+        -o APT::FTPArchive::Release::Architectures='amd64 arm64' \
         release "dists/${dist}" \
             | gpg --clearsign --yes -o "dists/${dist}/InRelease"
 done

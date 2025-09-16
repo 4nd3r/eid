@@ -14,12 +14,13 @@ jobs:
       fail-fast: false
       matrix:
         release: [bookworm, trixie, forky, sid]
+        arch: [amd64, arm64]
     steps:
       - name: Download
         uses: dawidd6/action-download-artifact@v11
         with:
           run_id: ${{github.event.inputs.run_id}}
-          name: ${{matrix.release}}
+          name: ${{matrix.release}}_${{matrix.arch}}
       - name: Upload
         continue-on-error: true
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
