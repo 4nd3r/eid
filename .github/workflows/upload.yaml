@@ -5,7 +5,7 @@ on:
     inputs:
       run_id:
         required: true
-        default: 17715562771
+        default: 17777612808
 jobs:
   upload:
     name: ${{matrix.release}}
@@ -14,19 +14,26 @@ jobs:
       fail-fast: false
       matrix:
         release: [bookworm, trixie, forky, sid]
-        arch: [amd64, arm64]
     steps:
-      - name: Download
+      - name: Download amd64
         uses: dawidd6/action-download-artifact@v11
         with:
           run_id: ${{github.event.inputs.run_id}}
-          name: ${{matrix.release}}_${{matrix.arch}}
-      - name: Upload
-        continue-on-error: true
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+          name: ${{matrix.release}}_amd64
+      - name: Download arm64
+        uses: dawidd6/action-download-artifact@v11
         with:
-          protocol: ftps
-          server: ${{secrets.FTP_SERVER}}
-          username: ${{secrets.FTP_USERNAME}}
-          password: ${{secrets.FTP_PASSWORD}}
-          server-dir: ${{matrix.release}}/
+          run_id: ${{github.event.inputs.run_id}}
+          name: ${{matrix.release}}_arm64
+      - name: Test
+        run: |
+          ls -l
+      #- name: Upload
+      #  continue-on-error: true
+      #  uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+      #  with:
+      #    protocol: ftps
+      #    server: ${{secrets.FTP_SERVER}}
+      #    username: ${{secrets.FTP_USERNAME}}
+      #    password: ${{secrets.FTP_PASSWORD}}
+      #    server-dir: ${{matrix.release}}/
