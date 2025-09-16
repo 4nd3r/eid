@@ -6,4 +6,4 @@ Repositoorium on [siin](https://kvlt.ee/debian) ja sisaldab:
 
 Kui tulevikus vajadus tekib, siis lisan ka teised pakid. Kaastöö on oodatud.
 
-Tagasisidestada ja tuge (võib-olla) saab [#linux.ee](https://linux.ee) jututoas `:>`.
+Tagasisidestada ja tuge saab (võib-olla) [#linux.ee](https://linux.ee) jututoas `:>`.
