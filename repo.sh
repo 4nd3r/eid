@@ -6,8 +6,13 @@ rsync -ir --delete kvlt.ee:public/debian/ ./
 
 for dist in sid forky trixie bookworm
 do
-    apt-ftparchive packages "pool/${dist}" \
-        >"dists/${dist}/main/binary-amd64/Packages"
+    d="dists/${dist}/main/binary-amd64"
+    mkdir -p "${d}"
+    apt-ftparchive --arch amd64 packages "pool/${dist}" >"${d}/Packages"
+
+    d="dists/${dist}/main/binary-arm64"
+    mkdir -p "${d}"
+    apt-ftparchive --arch arm64 packages "pool/${dist}" >"${d}/Packages"
 
     apt-ftparchive \
         -o APT::FTPArchive::Release::Suite="${dist}" \
