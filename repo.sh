@@ -2,7 +2,7 @@
 
 cd repo
 
-rsync -ir kvlt.ee:public/debian/ ./
+rsync -ir --delete kvlt.ee:public/debian/ ./
 
 for dist in sid forky trixie bookworm
 do
