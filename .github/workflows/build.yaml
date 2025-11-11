@@ -5,10 +5,10 @@ on:
     inputs:
       libdigidoc_ref:
         required: true
-        default: v4.2.1
+        default: v4.3.0
       digidoc_ref:
         required: true
-        default: v4.8.2
+        default: v4.9.0
       qtcommon_ref:
         required: true
         default: 6a1b2817ca3bdb529ec272dc9414d64c7e996f95
