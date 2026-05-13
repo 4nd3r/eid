@@ -23,24 +23,7 @@ jobs:
       DEBFULLNAME: github-actions
       DEBIAN_FRONTEND: noninteractive
     steps:
-      - name: Install git
-        run: |
-          apt-get -qq update
-          apt-get install git
-      - name: Checkout libdigidoc
-        uses: actions/checkout@v4
-        with:
-          repository: open-eid/libdigidocpp
-          ref: ${{github.event.inputs.libdigidoc_ref}}
-          path: libdigidoc
-      - name: Checkout digidoc
-        uses: actions/checkout@v4
-        with:
-          repository: open-eid/DigiDoc4-Client
-          submodules: recursive
-          ref: ${{github.event.inputs.digidoc_ref}}
-          path: digidoc
-      - name: Install build dependencies
+      - name: Install dependencies
         run: |
           apt-get -qq update
           apt-get -y install --no-install-recommends \
@@ -51,6 +34,7 @@ jobs:
             devscripts \
             doxygen \
             gettext \
+            git \
             libboost-test-dev \
             libflatbuffers-dev \
             libgl-dev \
@@ -70,6 +54,12 @@ jobs:
             qt6-tools-dev-tools \
             swig \
             zlib1g-dev
+      - name: Checkout libdigidoc
+        uses: actions/checkout@v4
+        with:
+          repository: open-eid/libdigidocpp
+          ref: ${{github.event.inputs.libdigidoc_ref}}
+          path: libdigidoc
       - name: Build libdigidoc
         working-directory: libdigidoc
         run: |
@@ -80,6 +70,13 @@ jobs:
       - name: Install libdigidoc
         run: |
           dpkg -i *.deb
+      - name: Checkout digidoc
+        uses: actions/checkout@v4
+        with:
+          repository: open-eid/DigiDoc4-Client
+          submodules: recursive
+          ref: ${{github.event.inputs.digidoc_ref}}
+          path: digidoc
       - name: Build digidoc
         working-directory: digidoc
         run: |
@@ -87,10 +84,10 @@ jobs:
           export VERSIONEX=${VERSION}+${{matrix.release}}.${{github.run_number}}
           dch --distribution ${{matrix.release}} -v ${VERSIONEX} "Release ${VERSIONEX}."
           dpkg-buildpackage -us -uc
-      - name: Lintian
+      - name: Run lintian
         run: |
           lintian *.deb
-      - name: Artifacts
+      - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
           name: ${{matrix.release}}_${{matrix.arch}}
