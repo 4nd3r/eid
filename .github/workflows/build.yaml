@@ -5,13 +5,10 @@ on:
     inputs:
       libdigidoc_ref:
         required: true
-        default: v4.3.0
+        default: v4.4.0
       digidoc_ref:
         required: true
-        default: v4.9.0
-      qtcommon_ref:
-        required: true
-        default: 6a1b2817ca3bdb529ec272dc9414d64c7e996f95
+        default: v4.10.0
 jobs:
   build:
     strategy:
@@ -36,14 +33,9 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: open-eid/DigiDoc4-Client
+          submodules: recursive
           ref: ${{github.event.inputs.digidoc_ref}}
           path: digidoc
-      - name: Checkout qt-common
-        uses: actions/checkout@v4
-        with:
-          repository: open-eid/qt-common
-          ref: ${{github.event.inputs.qtcommon_ref}}
-          path: digidoc/common
       - name: Dependencies
         run: |
           apt-get -qq update
