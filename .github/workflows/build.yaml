@@ -67,6 +67,7 @@ jobs:
           export VERSION=$(grep project CMakeLists.txt | egrep -o "([0-9]{1,}\.)+[0-9]{1,}")
           export VERSIONEX=${VERSION}+${{matrix.release}}.${{github.run_number}}
           dch --distribution ${{matrix.release}} -v ${VERSIONEX} "Release ${VERSIONEX}."
+          sed -i 's/java17-sdk-headless/default-jdk-headless/' debian/control
           JAVA_HOME=/usr/lib/jvm/default-java dpkg-buildpackage -us -uc
       - name: Install libdigidoc
         run: |
