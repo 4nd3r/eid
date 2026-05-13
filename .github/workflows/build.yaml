@@ -30,6 +30,7 @@ jobs:
             build-essential \
             cmake \
             debhelper \
+            default-jdk-headless \
             devscripts \
             doxygen \
             gettext \
@@ -47,7 +48,6 @@ jobs:
             libxmlsec1-dev \
             lintian \
             lsb-release \
-            openjdk-17-jdk-headless \
             pkg-config \
             python3-setuptools \
             qt6-l10n-tools \
