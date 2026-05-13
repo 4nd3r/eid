@@ -13,7 +13,7 @@ jobs:
   build:
     strategy:
       matrix:
-        release: [sid, trixie, bookworm]
+        release: [sid]
         arch: [amd64, arm64]
     name: ${{matrix.release}} ${{matrix.arch}}
     runs-on: ubuntu-24.04${{matrix.arch == 'arm64' && '-arm' || ''}}
