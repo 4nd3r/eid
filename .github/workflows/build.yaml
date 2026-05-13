@@ -23,6 +23,10 @@ jobs:
       DEBFULLNAME: github-actions
       DEBIAN_FRONTEND: noninteractive
     steps:
+      - name: Install git
+        run: |
+          apt-get -qq update
+          apt-get install git
       - name: Checkout libdigidoc
         uses: actions/checkout@v4
         with:
@@ -36,7 +40,7 @@ jobs:
           submodules: recursive
           ref: ${{github.event.inputs.digidoc_ref}}
           path: digidoc
-      - name: Dependencies
+      - name: Install build dependencies
         run: |
           apt-get -qq update
           apt-get -y install --no-install-recommends \
