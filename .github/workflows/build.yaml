@@ -12,6 +12,7 @@ on:
 jobs:
   build:
     strategy:
+      fail-fast: false
       matrix:
         release: [bookworm, trixie, forky, sid]
         arch: [amd64, arm64]
