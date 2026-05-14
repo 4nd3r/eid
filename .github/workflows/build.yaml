@@ -93,6 +93,6 @@ jobs:
       - name: Upload artifacts
         uses: actions/upload-artifact@v7
         with:
-          name: ${{matrix.release}}_${{matrix.arch}}
+          name: eid_${{matrix.release}}_${{matrix.arch}}
           path: "*.deb"
           retention-days: 1
