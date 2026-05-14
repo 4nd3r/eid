@@ -14,7 +14,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        release: [bookworm, trixie, forky, sid]
+        release: [trixie, forky, sid]
         arch: [amd64, arm64]
     name: ${{matrix.release}} ${{matrix.arch}}
     runs-on: ubuntu-24.04${{matrix.arch == 'arm64' && '-arm' || ''}}

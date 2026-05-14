@@ -4,7 +4,7 @@ cd repo
 
 rsync -ir --delete kvlt.ee:public/debian/ ./
 
-for dist in sid forky trixie bookworm
+for dist in sid forky trixie
 do
     d="dists/${dist}/main/binary-amd64"
     mkdir -p "${d}"
