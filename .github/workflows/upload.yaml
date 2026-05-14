@@ -15,18 +15,18 @@ jobs:
         release: [trixie, forky, sid]
     steps:
       - name: Download amd64
-        uses: dawidd6/action-download-artifact@v11
+        uses: dawidd6/action-download-artifact@v21
         with:
           run_id: ${{github.event.inputs.run_id}}
           name: ${{matrix.release}}_amd64
       - name: Download arm64
-        uses: dawidd6/action-download-artifact@v11
+        uses: dawidd6/action-download-artifact@v21
         with:
           run_id: ${{github.event.inputs.run_id}}
           name: ${{matrix.release}}_arm64
       - name: Upload
         continue-on-error: true
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+        uses: SamKirkland/FTP-Deploy-Action@v4.4.0
         with:
           protocol: ftps
           server: ${{secrets.FTP_SERVER}}
