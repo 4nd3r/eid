@@ -12,7 +12,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        release: [bookworm, trixie, forky, sid]
+        release: [trixie, forky, sid]
     steps:
       - name: Download amd64
         uses: dawidd6/action-download-artifact@v11
