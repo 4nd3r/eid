@@ -1,0 +1,5 @@
+Types: deb
+URIs: https://kvlt.ee/debian
+Suites: sid
+Components: main
+Signed-By: /etc/apt/keyrings/kvlt.asc

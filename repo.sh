@@ -1,4 +1,4 @@
-#!/bin/sh -e
+#!/bin/sh -ex
 
 cd repo
 
@@ -6,20 +6,30 @@ rsync -ir --delete kvlt.ee:public/debian/ ./
 
 for dist in sid forky trixie
 do
-    d="dists/${dist}/main/binary-amd64"
-    mkdir -p "${d}"
-    apt-ftparchive --arch amd64 packages "pool/${dist}" >"${d}/Packages"
+    for arch in amd64 arm64
+    do
+        artifact_zip="${HOME}/Downloads/eid_${dist}_${arch}.zip"
+        test -f "${artifact_zip}"
 
-    d="dists/${dist}/main/binary-arm64"
-    mkdir -p "${d}"
-    apt-ftparchive --arch arm64 packages "pool/${dist}" >"${d}/Packages"
+        pool_dir="pool/${dist}"
+        mkdir -p "${pool_dir}"
+
+        unzip -n "${artifact_zip}" -d "${pool_dir}"
+
+        dist_dir="dists/${dist}"
+        packages_info_dir="${dist_dir}/main/binary-${arch}"
+        mkdir -p "${packages_info_dir}"
+
+        apt-ftparchive --arch "${arch}" packages "${pool_dir}" \
+            >"${packages_info_dir}/Packages"
+    done
 
     apt-ftparchive \
         -o APT::FTPArchive::Release::Suite="${dist}" \
         -o APT::FTPArchive::Release::Components='main' \
         -o APT::FTPArchive::Release::Architectures='amd64 arm64' \
-        release "dists/${dist}" \
-            | gpg --clearsign --yes -o "dists/${dist}/InRelease"
+        release "${dist_dir}" \
+            | gpg --clearsign --yes -o "${dist_dir}/InRelease"
 done
 
 rsync -ir --delete ./ kvlt.ee:public/debian/

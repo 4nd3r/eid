@@ -1,0 +1,3 @@
+AddType text/plain .sh
+AddType text/plain .sources
+Options +Indexes
