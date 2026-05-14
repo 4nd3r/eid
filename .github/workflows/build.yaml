@@ -57,7 +57,7 @@ jobs:
             swig \
             zlib1g-dev
       - name: Checkout libdigidoc
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           repository: open-eid/libdigidocpp
           ref: ${{github.event.inputs.libdigidoc_ref}}
@@ -74,7 +74,7 @@ jobs:
         run: |
           dpkg -i *.deb
       - name: Checkout digidoc
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           repository: open-eid/DigiDoc4-Client
           submodules: recursive
@@ -91,7 +91,7 @@ jobs:
         run: |
           lintian *.deb
       - name: Upload artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: ${{matrix.release}}_${{matrix.arch}}
           path: "*.deb"
