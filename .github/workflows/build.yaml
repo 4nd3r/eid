@@ -5,10 +5,10 @@ on:
     inputs:
       libdigidoc_ref:
         required: true
-        default: v4.5.0
+        default: v4.5.1
       digidoc_ref:
         required: true
-        default: v4.11.0
+        default: v4.11.1
 jobs:
   build:
     strategy:
